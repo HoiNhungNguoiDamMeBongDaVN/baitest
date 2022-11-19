@@ -94,73 +94,106 @@
     //code new -------------------------------------------------------------------------------------------------------------
     function sum(){
         //get data from dom HTML
-        //convert string to array
-        let number1=(document.getElementById("number1").value).split('');
-        let number2=(document.getElementById("number2").value).split('');
-        //------------------
-
+        let number1=(document.getElementById("number1").value);
+        let number2=(document.getElementById("number2").value);
         let result=document.querySelector(".result");
-     
-        let length1=number1.length;
-        let length2=number2.length;
+
         let maxLength=null;
         let stringSum='';
         let resultString='';
         let resultNumber=0;
-       
 
-        if (length1<length2) {
-            maxLength=length2;
-            for (let i = length1; i < maxLength; i++) {
-                // using unshift add "a" to the string
-                number1.unshift("0");
-            }
+        //call function to check the numbers
+        if (checkNumber1(number1,number2)) {
+            alert("Nhập số phải lớn hơn 0!");
         }
-        if (length2<length1) {
-            maxLength=length1;
-            for (let i = length2; i < maxLength ; i++) {
-                // using unshift add "a" to the string
-                number2.unshift("0");
-            }
-           
+        if (checkNumber2(number1,number2)) {
+                alert("Bạn không được nhập ký tự");
         }
-        if(length1==length2){
-            maxLength=length2;
-        }
-        //convert array to string
-        let num1=number1.join('');
-        let num2=number2.join('');
-        //------------------
-        let numberMemorize=0;
-        let sumAll=0;
-       
+        else{
+            //convert string to array
+            let numberArray1=number1.split('');
+            let numberArray2=number2.split('');
+            //------------------
+
+            let length1=numberArray1.length;
+            let length2=numberArray2.length;
         
-    
-        for (let x = (maxLength)-1; x >=0; x--) {
-        let sum=0;
-            sum=(parseFloat(num1.charAt(x))+parseFloat(num2.charAt(x))+numberMemorize);
-            console.log(sum);
-            sumAll=sum%10;
-            numberMemorize=Math.floor(sum/10);
-            stringSum+=sumAll.toString();
-        }
-      
-        if(numberMemorize==1){
-            stringSum+="1";
-        }
-        resultString=reverseString(stringSum);
-        resultNumber=parseFloat(resultString);
+
+            if (length1<length2) {
+                maxLength=length2;
+                for (let i = length1; i < maxLength; i++) {
+                    // using unshift add "a" to the string
+                    numberArray1.unshift("0");
+                }
+            }
+            if (length2<length1) {
+                maxLength=length1;
+                for (let i = length2; i < maxLength ; i++) {
+                    // using unshift add "a" to the string
+                    numberArray2.unshift("0");
+                }
             
-        //render to interface
-        arrayNumber.push(resultNumber);
-        const setJson=JSON.stringify(arrayNumber);
-        localStorage.setItem('key',setJson);
-        const obj=JSON.parse(localStorage.getItem('key'));
-        result.innerHTML=arrayNumber.map(item=>
-            `
-            <p>Kết quả ${item}</p>
-            `
-        )
+            }
+            if(length1==length2){
+                maxLength=length2;
+            }
+            //convert array to string
+            let num1=numberArray1.join('');
+            let num2=numberArray2.join('');
+            //------------------
+            let numberMemorize=0;
+            let sumAll=0;
+        
+            for (let x = (maxLength)-1; x >=0; x--) {
+            let sum=0;
+                sum=(parseFloat(num1.charAt(x))+parseFloat(num2.charAt(x))+numberMemorize);
+              
+                sumAll=sum%10;
+                numberMemorize=Math.floor(sum/10);
+                stringSum+=sumAll.toString();
+            }
+        
+            if(numberMemorize==1){
+                stringSum+="1";
+            }
+            resultString=reverseString(stringSum);
+            resultNumber=parseFloat(resultString);
+                
+            //render to interface
+            arrayNumber.push(resultNumber);
+            const setJson=JSON.stringify(arrayNumber);
+            localStorage.setItem('key',setJson);
+            const obj=JSON.parse(localStorage.getItem('key'));
+            result.innerHTML=arrayNumber.map(item=>
+                `
+                <p>Kết quả ${item}</p>
+                `
+            )
+        }
+        
+    }
+
+    function checkNumber1(number1,number2){
+        let numArray=[number1,number2]
+        for (let x = 0; x < numArray.length; x++) {
+            const element = numArray[x];
+            if (element < 0) {
+                return true;
+            }
+        }
+    }
+
+    function checkNumber2(number1,number2){
+        let num1=number1.split('');
+        let num2=number2.split('');
+        let numArray=[...num1,...num2];
+        for (let x = 0; x < numArray.length; x++) {
+            let e=parseInt(numArray[x]);
+            if (Number.isNaN(e)==true) {
+                return true;
+            }
+        }
     }
 
     function reverseString(number){
